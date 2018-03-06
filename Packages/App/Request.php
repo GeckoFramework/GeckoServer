@@ -9,7 +9,7 @@ class Request
     function __construct($request)
     {
         self::$headers = getallheaders();
-        Kernel::implementComponents($this, 'Request');
+        Kernel::implementComponents($this, 'App\Interfaces\Request');
     }
 
     public function header($header)

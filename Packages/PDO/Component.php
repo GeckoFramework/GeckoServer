@@ -3,10 +3,9 @@ namespace PDO;
 
 use App;
 
-class Component
+class Component implements App\Interfaces\Database
 {
     protected $db;
-    public static $types = ['Database'];
 
     function __construct()
     {
@@ -15,7 +14,7 @@ class Component
         } catch (\Exception $e) {
             throw new \Exception("Errore configurazione database", 4);
         }
-        App\Kernel::implementComponents($this, 'Output');
+        App\Kernel::implementComponents($this, 'App\Interfaces\Output');
     }
     function query($query, $parameters = array())
     {
@@ -33,7 +32,7 @@ class PDOException extends \Exception
 {
     function __construct($message, $code)
     {
-        App\Kernel::implementComponents($this, 'Output');
+        App\Kernel::implementComponents($this, 'App\Interfaces\Output');
         parent::__construct($message, $code);
     }
     public function __toString()

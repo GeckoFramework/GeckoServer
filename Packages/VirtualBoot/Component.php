@@ -3,10 +3,8 @@ namespace VirtualBoot;
 
 use App;
 
-class Component extends App\Model
+class Component extends App\Model implements App\Interfaces\Kernel
 {
-    public static $types = ['Kernel'];
-
     public const PACKAGE_GECKO = 'Gecko';
 
 

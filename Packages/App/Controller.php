@@ -9,6 +9,6 @@ abstract class Controller
         $reflector = new \ReflectionClass(get_called_class());
         $packageName = $reflector->getNamespaceName();
         Kernel::implementComponents($this, $packageName);
-        Kernel::implementComponents($this, 'Output');
+        Kernel::implementComponents($this, 'App\Interfaces\Output');
     }
 }

@@ -6,10 +6,8 @@ use \Firebase\JWT\JWT;
 
 App\Kernel::includePackageFile('Authentication', 'lib/JWT');
 
-class Component extends App\Model
+class Component extends App\Model implements App\Interfaces\Request
 {
-    public static $types = ['Request'];
-
     private static $privateKey;
 
     private static $user;
@@ -17,7 +15,7 @@ class Component extends App\Model
     function __construct()
     {
         self::$privateKey = App\Kernel::getConfig("JWT_PRIVATE_KEY");
-        App\Kernel::implementComponents($this, 'Output');
+        App\Kernel::implementComponents($this, 'App\Interfaces\Output');
         parent::__construct();
     }
     public function checkToken($token = false)

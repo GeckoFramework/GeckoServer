@@ -3,10 +3,8 @@ namespace Dump;
 
 use App;
 
-class Component
+class Component implements App\Interfaces\Output
 {
-    public static $types = ['Output'];
-    
     const CODE_SUCCESS = 0;
     const CODE_MISSING_ROUTE = 1;
     const CODE_MISSING_PARAMETER = 2;

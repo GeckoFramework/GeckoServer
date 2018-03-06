@@ -6,8 +6,8 @@ abstract class Model
 {
     function __construct()
     {
-        Kernel::implementComponents($this, 'Model');
-        Kernel::implementComponents($this, 'Database');
+        Kernel::implementComponents($this, 'App\Interfaces\Model');
+        Kernel::implementComponents($this, 'App\Interfaces\Database');
     }
 
     public function get()

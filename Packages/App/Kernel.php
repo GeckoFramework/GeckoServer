@@ -33,7 +33,7 @@ class Kernel
             unset($path[0]);
             $file = implode('\\', $path);
             if (!self::includePackageFile($package, $file)) {
-                throw new \Exception("Class doesn't exists");
+                throw new \Exception("Class '" . $className . "' doesn't exists");
             }
         });
         self::initConfig();
@@ -43,7 +43,7 @@ class Kernel
             'PDO'
         ]);
         self::initComponents();
-        self::implementComponents($this, 'Kernel');
+        self::implementComponents($this, 'App\Interfaces\Kernel');
     }
 
     public static function initPackages($packages)
@@ -56,13 +56,8 @@ class Kernel
         foreach (self::getPackages(true) as $package) {
             if (self::includePackageFile($package, self::PACKAGE_COMPONENT)) {
                 $class = $package . '\\' . self::PACKAGE_COMPONENT;
-                $types = [];
-                if (property_exists($class, 'types')) {
-                    $types = $class::$types;
-                }
-                if (!in_array($package, $types)) {
-                    $types = array_merge($types, [$package]);
-                }
+                $types = class_implements($class);
+                $types = array_merge($types, [$package]);
                 foreach ($types as $componentType) {
                     if (!array_key_exists($componentType, self::$components)) {
                         self::$components[$componentType] = [];
@@ -81,11 +76,13 @@ class Kernel
     public static function implementComponents(&$instance, $componentType, $constructor = false)
     {
         if (array_key_exists($componentType, self::$components)) {
-            $instance->$componentType = new ComponentInterface();
+            $interfaceName = explode('\\', $componentType);
+            $componentIdentifier = end($interfaceName);
+            $instance->$componentIdentifier = new ComponentInterface();
             foreach (self::$components[$componentType] as $componentName => $componentClass) {
                 if ($constructor) {
                     try {
-                        $instance->$componentType->__addComponent($componentName, new $componentClass($constructor));
+                        $instance->$componentIdentifier->__addComponent($componentName, new $componentClass($constructor));
                     } catch (\Exception $e) {
                         die(500);
                     }
@@ -98,7 +95,7 @@ class Kernel
                         }
 
                     }
-                    $instance->$componentType->__addComponent($componentName, static::$componentsInstances[$componentClass]);
+                    $instance->$componentIdentifier->__addComponent($componentName, static::$componentsInstances[$componentClass]);
                 }
             }
             $priorityOrder = null;
@@ -107,7 +104,7 @@ class Kernel
             } else {
                 $priorityOrder = array_keys(self::$components[$componentType]);
             }
-            $instance->$componentType->__loadPriority($priorityOrder);
+            $instance->$componentIdentifier->__loadPriority($priorityOrder);
         }
         return true;
     }
@@ -146,7 +143,7 @@ class Kernel
 
     public static function includePackageFile($package, $file, $alsoIfNotInitialized = false)
     {
-        $path = 'Packages/' . $package . '/' . $file . '.php';
+        $path = 'Packages/' . $package . '/' . str_replace("\\", "/", $file) . '.php';
         if ((in_array($package, self::getPackages()) || $alsoIfNotInitialized) && file_exists($path)) {
             require_once $path;
             return $path;

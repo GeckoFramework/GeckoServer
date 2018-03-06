@@ -3,10 +3,8 @@ namespace JSON;
 
 use App;
 
-class Component
-{
-    public static $types = ['Output'];
-    
+class Component implements App\Interfaces\Output
+{   
     const CODE_SUCCESS = 0;
     const CODE_MISSING_ROUTE = 1;
     const CODE_MISSING_PARAMETER = 2;
