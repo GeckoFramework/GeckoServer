@@ -1,5 +1,5 @@
 <?php
-namespace Authentication;
+namespace Authentication\Components;
 
 use App;
 use \Firebase\JWT\JWT;

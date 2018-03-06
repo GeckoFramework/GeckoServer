@@ -1,5 +1,5 @@
 <?php
-namespace PDO;
+namespace PDO\Components;
 
 use App;
 

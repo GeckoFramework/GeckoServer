@@ -1,5 +1,5 @@
 <?php
-namespace VirtualBoot;
+namespace VirtualBoot\Components;
 
 use App;
 

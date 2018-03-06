@@ -3,7 +3,7 @@ namespace Agent;
 
 use App;
 
-class Component extends App\Model
+class Model extends App\Model
 {
     const table = "agents";
     public function updateName($name, $id)

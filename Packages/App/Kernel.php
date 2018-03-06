@@ -8,7 +8,6 @@ class Kernel
     const PACKAGE_CONTROLLER = 'Controller';
     const PACKAGE_MODEL = 'Model';
     const PACKAGE_CONFIG = 'Config';
-    const PACKAGE_COMPONENT = 'Component';
     const PACKAGE_ROUTES = 'Routes';
     const PACKAGE_MIDDLEWARE = 'Middleware';
 
@@ -51,18 +50,27 @@ class Kernel
         self::$packages = array_merge(self::$packages, $packages);
     }
 
+    public static function getPackageComponents($package)
+    {
+        $path = 'Packages/' . $package . '/Components';
+        return array_map(function ($value) {
+            return pathinfo($value, \PATHINFO_FILENAME);
+        }, array_diff(scandir($path), array('.', '..')));
+    }
+
     public static function initComponents()
     {
         foreach (self::getPackages(true) as $package) {
-            if (self::includePackageFile($package, self::PACKAGE_COMPONENT)) {
-                $class = $package . '\\' . self::PACKAGE_COMPONENT;
-                $types = class_implements($class);
-                $types = array_merge($types, [$package]);
-                foreach ($types as $componentType) {
-                    if (!array_key_exists($componentType, self::$components)) {
-                        self::$components[$componentType] = [];
+            foreach (self::getPackageComponents($package) as $component) {
+                if (self::includePackageFile($package, "Components/" . $component)) {
+                    $class = $package . '\\Components\\' . $component;
+                    $types = class_implements($class);
+                    foreach ($types as $componentType) {
+                        if (!array_key_exists($componentType, self::$components)) {
+                            self::$components[$componentType] = [];
+                        }
+                        self::$components[$componentType][$package] = $class;
                     }
-                    self::$components[$componentType][$package] = $class;
                 }
             }
         }
@@ -73,13 +81,16 @@ class Kernel
         self::$componentsPriority[$componentType] = $order;
     }
 
-    public static function implementComponents(&$instance, $componentType, $constructor = false)
+    public static function implementComponents(&$instance, $componentType, $package = false, $constructor = false)
     {
         if (array_key_exists($componentType, self::$components)) {
             $interfaceName = explode('\\', $componentType);
             $componentIdentifier = end($interfaceName);
             $instance->$componentIdentifier = new ComponentInterface();
             foreach (self::$components[$componentType] as $componentName => $componentClass) {
+                if($package && $package !== $componentName){
+                    continue;
+                }
                 if ($constructor) {
                     try {
                         $instance->$componentIdentifier->__addComponent($componentName, new $componentClass($constructor));
