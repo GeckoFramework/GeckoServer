@@ -53,9 +53,14 @@ class Kernel
     public static function getPackageComponents($package)
     {
         $path = 'Packages/' . $package . '/Components';
-        return array_map(function ($value) {
-            return pathinfo($value, \PATHINFO_FILENAME);
-        }, array_diff(scandir($path), array('.', '..')));
+        if ($scanDir = @scandir($path)) {
+            if ($scanDirFiltered = array_diff($scanDir, array('.', '..'))) {
+                return array_map(function ($value) {
+                    return pathinfo($value, \PATHINFO_FILENAME);
+                }, $scanDirFiltered);
+            }
+        }
+        return [];
     }
 
     public static function initComponents()
@@ -88,7 +93,7 @@ class Kernel
             $componentIdentifier = end($interfaceName);
             $instance->$componentIdentifier = new ComponentInterface();
             foreach (self::$components[$componentType] as $componentName => $componentClass) {
-                if($package && $package !== $componentName){
+                if ($package && $package !== $componentName) {
                     continue;
                 }
                 if ($constructor) {
