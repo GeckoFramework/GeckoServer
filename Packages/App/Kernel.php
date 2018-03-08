@@ -98,14 +98,14 @@ class Kernel
                 }
                 if ($constructor) {
                     try {
-                        $instance->$componentIdentifier->__addComponent($componentName, new $componentClass($constructor));
+                        $instance->$componentIdentifier->__addComponent($componentName, new $componentClass($instance, $constructor));
                     } catch (\Exception $e) {
                         die(500);
                     }
                 } else {
                     if (!key_exists($componentClass, static::$componentsInstances)) {
                         try {
-                            static::$componentsInstances[$componentClass] = new $componentClass();
+                            static::$componentsInstances[$componentClass] = new $componentClass($instance);
                         } catch (\Exception $e) {
                             die(500);
                         }

@@ -3,10 +3,15 @@ namespace VirtualBoot\Components;
 
 use App;
 
-class Component extends App\Model implements App\Interfaces\Kernel
+class Component implements App\Interfaces\Kernel
 {
     public const PACKAGE_GECKO = 'Gecko';
 
+    public function __construct()
+    {
+        App\Kernel::implementComponents($this, 'App\Interfaces\Database');
+        $this->boot();
+    }
 
     public function boot()
     {
