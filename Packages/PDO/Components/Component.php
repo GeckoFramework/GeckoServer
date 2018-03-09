@@ -10,8 +10,9 @@ class Component implements App\Interfaces\Database
     function __construct()
     {
         try {
-            $this->db = new \PDO(App\Kernel::getConfig('DATABASE_TYPE') . ':host=' . App\Kernel::getConfig('DATABASE_HOST') . ';dbname=' . App\Kernel::getConfig('DATABASE_NAME'), App\Kernel::getConfig('DATABASE_USER'), App\Kernel::getConfig('DATABASE_PASSWORD'));
+            $this->db = new \PDO(App\Kernel::getConfig('DATABASE_TYPE') . ':host=' . App\Kernel::getConfig('DATABASE_HOST') . ';port=' . App\Kernel::getConfig('DATABASE_PORT') . ';dbname=' . App\Kernel::getConfig('DATABASE_NAME'), App\Kernel::getConfig('DATABASE_USER'), App\Kernel::getConfig('DATABASE_PASSWORD'));
         } catch (\Exception $e) {
+            var_dump($e);
             throw new \Exception("Errore configurazione database", 4);
         }
         App\Kernel::implementComponents($this, 'App\Interfaces\Output');
