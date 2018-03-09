@@ -30,7 +30,11 @@ class ComponentInterface
 
     public function __call($methodName, $arguments)
     {
-        $component = $this->__use();
-        return call_user_func_array([$component, $methodName], $arguments);
+        foreach($this->components as $name => $instance){
+            if(method_exists($instance, $methodName)){
+                return call_user_func_array([$instance, $methodName], $arguments);
+            }
+        }
+        throw new \Exception("Method " . $methodName . " doesn't exists");
     }
 }
