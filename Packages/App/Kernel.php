@@ -38,6 +38,7 @@ class Kernel
         self::initConfig();
         self::initPackages([
             'App',
+            'Request',
             'JSON',
             'PDO'
         ]);
@@ -206,15 +207,14 @@ class Kernel
                 $class = $package . '\\' . self::PACKAGE_CONTROLLER;
                 if (method_exists($class, $action)) {
                     $controllerInstance = new $class();
-                    $request = new Request($_REQUEST);
                     $next = true;
                     if (is_callable($middlewareBefore)) {
-                        $next = $middlewareBefore($request);
+                        $next = $middlewareBefore();
                     }
                     if ($next) {
-                        $next = $controllerInstance->$action($request);
+                        $next = $controllerInstance->$action();
                         if (is_callable($middlewareAfter)) {
-                            $middlewareAfter($request, $next);
+                            $middlewareAfter($next);
                         }
                         die();
                     } else {

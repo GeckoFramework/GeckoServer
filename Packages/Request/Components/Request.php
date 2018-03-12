@@ -1,15 +1,14 @@
 <?php
 
-namespace App;
+namespace Request\Components;
 
-class Request
+class Request implements \App\Interfaces\Request
 {
     protected static $headers;
 
     function __construct($request)
     {
         self::$headers = getallheaders();
-        Kernel::implementComponents($this, 'App\Interfaces\Request');
     }
 
     public function header($header)

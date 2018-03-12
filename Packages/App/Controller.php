@@ -14,5 +14,6 @@ abstract class Controller
             $this->model = new $className();
         }
         Kernel::implementComponents($this, 'App\Interfaces\Output');
+        Kernel::implementComponents($this, 'App\Interfaces\Request');
     }
 }
