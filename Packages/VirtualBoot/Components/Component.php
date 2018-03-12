@@ -65,12 +65,12 @@ class Component implements App\Interfaces\Kernel
                 'priority' => $priority
             ];
         }
-        return $this->Database->query("INSERT INTO priorities (component_type, component_name, priority) $priorityQuery", $queryParameters);
+        return $this->database->query("INSERT INTO priorities (component_type, component_name, priority) $priorityQuery", $queryParameters);
     }
 
     private function loadPriorities()
     {
-        $priorities = $this->Database->query("
+        $priorities = $this->database->query("
             SELECT 
                 component_type,
                 component_name,
@@ -93,7 +93,7 @@ class Component implements App\Interfaces\Kernel
     {
         if (is_array($packages) && count($packages) > 0) {
             $qMarks = str_repeat('?,', count($packages) - 1) . '?';
-            return $this->Database->query("
+            return $this->database->query("
             SELECT 
                 method,
                 route,
@@ -121,7 +121,7 @@ class Component implements App\Interfaces\Kernel
                         if (!isset($route[App\Kernel::ROUTES_MIDDLEWARE])) {
                             $route[App\Kernel::ROUTES_MIDDLEWARE] = null;
                         }
-                        $this->Database->query("INSERT INTO routes (package_id, method, route, controller, action, middleware) VALUES ((SELECT package_id FROM packages WHERE name = :package), :method, :route, :controller, :action, :middleware)", [
+                        $this->database->query("INSERT INTO routes (package_id, method, route, controller, action, middleware) VALUES ((SELECT package_id FROM packages WHERE name = :package), :method, :route, :controller, :action, :middleware)", [
                             "package" => $package,
                             "method" => $route[App\Kernel::ROUTES_METHOD],
                             "route" => $route[App\Kernel::ROUTES_ROUTE],
@@ -137,15 +137,15 @@ class Component implements App\Interfaces\Kernel
     }
     private function insert($values)
     {
-        return $this->Database->query("INSERT INTO packages (name) VALUES (:name)", $values);
+        return $this->database->query("INSERT INTO packages (name) VALUES (:name)", $values);
     }
     private function delete($values)
     {
-        return $this->Database->query("DELETE FROM packages WHERE name = (:name)", $values);
+        return $this->database->query("DELETE FROM packages WHERE name = (:name)", $values);
     }
     private function isActive($package)
     {
-        $res = $this->Database->query("SELECT active FROM packages WHERE name = :name", [
+        $res = $this->database->query("SELECT active FROM packages WHERE name = :name", [
             'name' => $package
         ]);
         if (count($res) > 0) {
@@ -155,7 +155,7 @@ class Component implements App\Interfaces\Kernel
     private function setActive($package, $active, $force = false)
     {
         if ($force || $this->isActive($package) !== $active) {
-            return $this->Database->query("UPDATE packages SET active = :active WHERE name = (:name)", [
+            return $this->database->query("UPDATE packages SET active = :active WHERE name = (:name)", [
                 'active' => $active,
                 'name' => $package
             ]);
@@ -164,7 +164,7 @@ class Component implements App\Interfaces\Kernel
     }
     public function getActivePackages()
     {
-        $res = $this->Database->query("SELECT name FROM packages WHERE active = 1");
+        $res = $this->database->query("SELECT name FROM packages WHERE active = 1");
         if (count($res) > 0) {
             return array_column($res, 'name');
         }

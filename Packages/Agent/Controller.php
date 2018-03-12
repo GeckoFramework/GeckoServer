@@ -7,9 +7,9 @@ class Controller extends App\Controller
 {
     function list($request)
     {
-        $user = $request->Request->user();
+        $user = $request->request->user();
         $agents = $this->model->get();
-        $this->Output->reply($agents);
+        $this->output->reply($agents);
     }
     function create($request)
     {
@@ -18,18 +18,18 @@ class Controller extends App\Controller
                 'name' => $name,
                 'created_at' => date('Y-m-d H:i:s', time())
             ]);
-            $this->Output->reply($agents);
+            $this->output->reply($agents);
         } else {
-            $this->Output->reply('Parametro name mancante', $this->Output->use()::CODE_MISSING_PARAMETER);
+            $this->output->reply('Parametro name mancante', $this->output->use()::CODE_MISSING_PARAMETER);
         }
     }
     function setName($request)
     {
         if ( ($newName = $request->get('name')) && ($id = (int)$request->get('id'))) {
             $agents = $this->model->updateName($newName, $id);
-            $this->Output->reply($agents);
+            $this->output->reply($agents);
         } else {
-            $this->Output->reply('Parametro name mancante', $this->Output->use()::CODE_MISSING_PARAMETER);
+            $this->output->reply('Parametro name mancante', $this->output->use()::CODE_MISSING_PARAMETER);
         }
     }
 }

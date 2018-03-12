@@ -90,7 +90,7 @@ class Kernel
     {
         if (array_key_exists($componentType, self::$components)) {
             $interfaceName = explode('\\', $componentType);
-            $componentIdentifier = end($interfaceName);
+            $componentIdentifier = strtolower(end($interfaceName));
             $instance->$componentIdentifier = new ComponentInterface();
             foreach (self::$components[$componentType] as $componentName => $componentClass) {
                 if ($package && $package !== $componentName) {

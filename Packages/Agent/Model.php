@@ -10,7 +10,7 @@ class Model extends App\Model
     {
         if (is_string($name) && is_int($id)) {
             $query = 'UPDATE ' . static::table . ' SET  name=:name WHERE agentId=:id';
-            return $this->Database->query($query, [
+            return $this->database->query($query, [
                 'name' => $name,
                 'id' => $id,
             ]);

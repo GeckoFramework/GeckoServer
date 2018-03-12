@@ -10,7 +10,7 @@ class Model extends App\Model
 {
     public function getToken($username, $password)
     {
-        $res = $this->Database->query("SELECT user_id FROM users WHERE username = :username AND password = :password", [
+        $res = $this->database->query("SELECT user_id FROM users WHERE username = :username AND password = :password", [
             "username" => $username,
             "password" => $password
         ]);

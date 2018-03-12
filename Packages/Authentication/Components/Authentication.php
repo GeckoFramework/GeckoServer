@@ -26,7 +26,7 @@ class Authentication implements App\Interfaces\Request
             self::$user = $decoded->usr;
             return true;
         } catch (\Exception $e) {
-            $this->Output->reply("Not authorized");
+            $this->output->reply("Not authorized");
             die();
         }
     }

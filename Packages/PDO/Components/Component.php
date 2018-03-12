@@ -13,7 +13,7 @@ class Component implements App\Interfaces\Database
             $this->db = new \PDO(App\Kernel::getConfig('DATABASE_TYPE') . ':host=' . App\Kernel::getConfig('DATABASE_HOST') . ';port=' . App\Kernel::getConfig('DATABASE_PORT') . ';dbname=' . App\Kernel::getConfig('DATABASE_NAME'), App\Kernel::getConfig('DATABASE_USER'), App\Kernel::getConfig('DATABASE_PASSWORD'));
         } catch (\Exception $e) {
             var_dump($e);
-            throw new \Exception("Errore configurazione database", 4);
+            throw new \PDOException("Errore configurazione database", 4);
         }
         App\Kernel::implementComponents($this, 'App\Interfaces\Output');
     }
@@ -38,6 +38,6 @@ class PDOException extends \Exception
     }
     public function __toString()
     {
-        return $this->Output->reply("Errore nella richiesta al database");
+        return $this->output->reply("Errore nella richiesta al database");
     }
 }

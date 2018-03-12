@@ -12,7 +12,7 @@ abstract class Model
 
     public function get()
     {
-        $agents = $this->Database->query('SELECT * FROM ' . static::table);
+        $agents = $this->database->query('SELECT * FROM ' . static::table);
         return $agents;
     }
 
@@ -23,7 +23,7 @@ abstract class Model
             $queryColumns = implode(", ", $columns);
             $queryValues = ":" . implode(", :", $columns);
             $query = 'INSERT INTO ' . static::table . ' (' . $queryColumns . ') VALUES (' . $queryValues . ')';
-            return $this->Database->query($query, $values);
+            return $this->database->query($query, $values);
         }
     }
 
@@ -39,7 +39,7 @@ abstract class Model
                 $values = array_merge($values, $where['arguments']);
             }
             $query = 'UPDATE ' . static::table . ' SET ' . $setFields . ' WHERE ' . $where['where'];
-            return $this->Database->query($query, $values);
+            return $this->database->query($query, $values);
         }
     }
 
@@ -50,6 +50,6 @@ abstract class Model
             $values = $where['arguments'];
         }
         $query = 'DELETE FROM ' . static::table . ' WHERE ' . $where['where'];
-        return $this->Database->query($query, $values);
+        return $this->database->query($query, $values);
     }
 }
