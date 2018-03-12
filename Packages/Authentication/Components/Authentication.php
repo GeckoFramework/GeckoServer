@@ -10,13 +10,11 @@ class Authentication implements App\Interfaces\Request
 {
     private static $user;
 
-    private $request;
-
-    function __construct($request)
+    function __construct()
     {
         App\Kernel::implementComponents($this, 'App\Interfaces\Output');
         App\Kernel::implementComponents($this, 'App\Interfaces\Database');
-        $this->request = $request;
+        App\Kernel::implementComponents($this, 'App\Interfaces\Request');
     }
     public function checkToken()
     {

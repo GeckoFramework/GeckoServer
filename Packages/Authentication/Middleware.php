@@ -4,9 +4,13 @@ namespace Authentication;
 
 class Middleware
 {
-    public static function before(){
-        return function($request){
-            return $request->request->checkToken();
+    function __construct()
+    {
+        \App\Kernel::implementComponents($this, "App\Interfaces\Request");
+    }
+    public function before(){
+        return function(){
+            return $this->request->checkToken();
         };
     }
 }
