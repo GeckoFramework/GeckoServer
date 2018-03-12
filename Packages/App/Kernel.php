@@ -94,7 +94,7 @@ class Kernel
             $componentIdentifier = strtolower(end($interfaceName));
             $instance->$componentIdentifier = new ComponentInterface();
             foreach (self::$components[$componentType] as $componentName => $componentClass) {
-                if ($package && $package !== $componentName) {
+                if ($componentClass === get_class($instance) || ($package && $package !== $componentName)) {
                     continue;
                 }
                 if ($constructor) {
@@ -174,11 +174,12 @@ class Kernel
         $middlewareAfter = false;
         if (is_string($middleware) && self::includePackageFile($middleware, self::PACKAGE_MIDDLEWARE)) {
             $class = $middleware . '\\' . self::PACKAGE_MIDDLEWARE;
+            $middleware = new $class();
             if (method_exists($class, "before")) {
-                $middlewareBefore = $class::before();
+                $middlewareBefore = $middleware->before();
             }
             if (method_exists($class, "after")) {
-                $middlewareAfter = $class::after();
+                $middlewareAfter = $middleware->after();
             }
         }
         self::$routes[$method][$route] = [$controller, $action, $middlewareBefore, $middlewareAfter];
